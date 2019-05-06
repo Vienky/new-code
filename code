@@ -78,14 +78,10 @@ initial_state = lstm_cell.zero_state(batch_size, dtype = tf.float32)
 decoder_cell = tf.nn.rnn_cell.LSTMCell(num_units = num_units)
 
 #Helper
-helper = tf.contrib.seq2seq.TrainingHelper(decoder_emb_inp, decoder_lengths, time_major = True)
+helper = tf.contrib.seq2seq.TrainingHelper(decoder_emb_imp, decoder_lengths, time_major = True)
 decoder = tf.contrib.seq2seq.BasicDecoder(decoder_cell, helper, encoder_state, output_layer = projection_layer)
 #Dynamic decoding
 outputs, _ = tf.contrib.seq2seq.dynamic_decode(decoder)​#Helper
-helper = tf.contrib.seq2seq.TrainingHelper(decoder_emb_inp, decoder_lengths, time_major = True)
-decoder = tf.contrib.seq2seq.BasicDecoder(decoder_cell, helper, encoder_state, output_layer = projection_layer)
-#Dynamic decoding
-outputs, _ = tf.contrib.seq2seq.dynamic_decode(decoder)
 logits = outputs.rnn_output
 projection_layer = layers_core.Dense(target_voc_size, use_bias = False)
 
