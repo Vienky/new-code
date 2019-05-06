@@ -49,6 +49,21 @@ def _init_(self, hidden_size, input_size, batch_size, num_layers = 2, bidirecton
     self.lstm = nn.LSTM(input_size = hidden_size, hidden_size = hidden_size, num_layers = num_layers)
 '''
 
+'''
+#text processing
+def extract_character_voc(source_voc):
+    
+    special_words = ['<PAD>', '<UNK>', '<GO>', '<EOS>']
+    
+    set_words = list(set([character for line in source_voc.split('\n') for character in line]))
+    # put these special words into the dictionary
+    int_to_voc = {idx: word for idx, word in enumerate(special_words + set_words)}
+    voc_to_int = {word: idx for idx, word in int_to_voc.item()}
+    
+    return int_to_voc, voc_to_int
+'''
+
+
 #encoder rnn cell
 num_units = 128
 encoder_cell = tf.nn.rnn_cell.LSTMCell(num_units = num_units)
