@@ -54,10 +54,11 @@ num_units = 128
 encoder_cell = tf.nn.rnn_cell.LSTMCell(num_units = num_units)
 
 #it uses bidirectional RNN, so the code should be written  this way:
-sequence_length = 128
-def bidirectional_dynamic_rnn(cell_fw, cell_bw, inputs, sequence_length, initial_state_fw = None,
-                             initial_state_bw = None, dtype = None, parallel_iterations = None, 
-                             swap_memory = False, time_major =True, scope = None)
+#it uses bidirectional RNN, so the code could be written in this way:
+lstm_cell = tf.nn.rnn_cell.BasicLSTMCell(hidden_size)
+initial_state = lstm_cell.zero_state(batch_size, dtype = tf.float32)
+((outputs_fw, outputs_bw), (outputs_state_fw, outputs_state_bw)) = tf.nn.bidirectional_dynamic_rnn(lstm_cell, lstm_cell, encoder_emb_imp,  sequence_length=None, dtype = tf.float32)
+
 #build decoder rnn cell
 decoder_cell = tf.nn.rnn_cell.LSTMCell(num_units = num_units)
 
