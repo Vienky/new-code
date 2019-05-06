@@ -53,7 +53,7 @@ def _init_(self, hidden_size, input_size, batch_size, num_layers = 2, bidirecton
 num_units = 128
 encoder_cell = tf.nn.rnn_cell.LSTMCell(num_units = num_units)
 
-#it uses bidirectional RNN, so the code should be written  this way:
+
 #it uses bidirectional RNN, so the code could be written in this way:
 lstm_cell = tf.nn.rnn_cell.BasicLSTMCell(hidden_size)
 initial_state = lstm_cell.zero_state(batch_size, dtype = tf.float32)
