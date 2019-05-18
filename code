@@ -93,7 +93,18 @@ output = tf.concat([output[0], output[1]], 2)
 enc_hidden_state  = tf.concat([enc_state[1][0], enc_state[1][1]], 1)
 enc_hidden_state = tf.expand_dims(enc_hidden_state, 2)
 
-
+if mode == 'decode':
+    
+    batch_size = batch_size * beam_size
+    start_tokens = tf.ones([batch_size, ], tf.int32) * word_to_idx['<GO>']
+    end_token = word_to_idx['<EOS>']
+    inference_decoder = tf.contrib.seq2seq.BeamSearchDecoder(cell = decoder_cell, embedding = embedding_decoder, 
+                                                       start_tokens = start_tokens, end_token = end_tokens,
+                                                       initial_state = decoder_initial_state, beam_width = beam_size,
+                                                       output_layer = projection_layer)
+    decoder_outputs,_,_ = tf.contrib.seq2seq.dynamic_decode(decoder = inference_decoder, impute_finished = True,
+                                                        maximun_iteration = max_target_sequence_length)
+    decoder_predict_decode = decoder_outputs.predict_ids
 mask = tf.sequence_mask(decoder_inputs_length, max_target_sequence_length, dtype = tf.float32, name = 'masks')
 with tf.variable_scope('decoder'):
     '''encoder_outputs = tf.contrib.seq2seq.tile_batch(encoder_outputs, multiplier = beam_size)
@@ -144,3 +155,15 @@ with tf.variable_scope('decoder'):
             gradients, _ = tf.clip_by_global_norm(gradients, 25.0)
             optimize = optimizer.apply_gradients(zip(gradients, v))
 
+    if mode == 'decode':
+    
+    batch_size = batch_size * beam_size
+    start_tokens = tf.ones([batch_size, ], tf.int32) * word_to_idx['<GO>']
+    end_token = word_to_idx['<EOS>']
+    inference_decoder = tf.contrib.seq2seq.BeamSearchDecoder(cell = decoder_cell, embedding = embedding_decoder, 
+                                                       start_tokens = start_tokens, end_token = end_tokens,
+                                                       initial_state = decoder_initial_state, beam_width = beam_size,
+                                                       output_layer = projection_layer)
+    decoder_outputs,_,_ = tf.contrib.seq2seq.dynamic_decode(decoder = inference_decoder, impute_finished = True,
+                                                        maximun_iteration = max_target_sequence_length)
+    decoder_predict_decode = decoder_outputs.predict_ids
